@@ -937,12 +937,18 @@ int main(){
 					if (in[3] == 'B'){
 						size_t len = 0;
 						ssize_t read;
+						int j=99;
 						for ( i = 0; i <= sizeof(in); i++){
-							if (in[i+12] == temp[1]) break;
-							file[i] = in[i+12];
+							if (in [i] == '-') {j=0;}
+							//printf("%d, %d, %s\n", i , j, file);
+							if (in[i] == temp[1]) break;
+							if (j < 90 && j != 0 ){
+							file[j-1] = in[i];}
+							j++;
 						}
-						file[i] = 0;
-			
+						
+						file[j-1] = 0;
+						
 						fp = fopen( file , "r");
 						
 						if (!fp) printf("%s", file);
