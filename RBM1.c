@@ -960,8 +960,8 @@ int main(){
 					else{
 					/* recevice the appointment and put into the appointment array*/
 						ap[job] = input(in);
-						int weekday = getDate(ap[job].date);
-						printf("%d", weekday);
+						//int weekday = getDate(ap[job].date);
+						//printf("%d", weekday);
 						//printf("%s %s %s %s %s %s %s %s\n", ap[job].service, ap[job].date, ap[job].time, ap[job].duration, ap[job].room, ap[job].caller, ap[job].fac1, ap[job].fac2);
 						strcpy(ap[job].priority, "99");
 						job++;
