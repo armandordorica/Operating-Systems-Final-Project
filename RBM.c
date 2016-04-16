@@ -271,9 +271,7 @@ int childfunction(char booked_time_date[4], int duration, int priority, int time
 		}
 		return 100;//book successfully
 	}
-	else{
-		//do nothing
-	}
+
 	/*Figure out the highest priority in the booked timeslot*/
 	if (flag == 1) {
 		
@@ -294,8 +292,16 @@ int childfunction(char booked_time_date[4], int duration, int priority, int time
 
 }
 
-void OutTable(struct appointment ap[],int job)
+void OutTable(struct appointment ap[],int job,char in[])
 {
+	FILE*out;
+	switch (in[17])
+	{
+	case 'f': out = fopen("fcfs.dat", "w+"); break;
+	case 'p': out = fopen("prio.dat", "w+"); break;
+	case 'o': out = fopen("optimal.dat", "w+"); break;
+	}
+	
 	int n ;
 	int acA=0, reA=0;
 	int acB = 0, reB= 0;
@@ -312,10 +318,10 @@ void OutTable(struct appointment ap[],int job)
 	}
 	printf("%d", job);
 	//*********************Accepted Part***********************//
-	printf("***Room Booking – ACCEPTED***\n");
-	printf("Room A has the following bookings:\n");
-	printf("Date\t\t Start\t End\t Type\t\t Requester\t Device\n");
-	printf("==========================================================\n");
+	fprintf(out, "***Room Booking ACCEPTED***\n");
+	fprintf(out, "Room A has the following bookings:\n");
+	fprintf(out, "Date\t\t Start\t End\t Type\t\t Requester\t Device\n");
+	fprintf(out, "==========================================================\n");
 	for (n = 0; n <= job; n++)
 	{
 		if (!strcmp(ap[n].room, "m_A"))
@@ -323,9 +329,11 @@ void OutTable(struct appointment ap[],int job)
 			if (ap[n].accepted == 1)
 			{
 				printf("%s\t %s\t %s\t %s\t\t %s\t %s\n", ap[n].date, ap[n].time, ap[n].duration,ap[n].service, ap[n].caller, ap[n].fac1);
+				fprintf(out, "%s\t %s\t %s\t %s\t\t %s\t %s\n", ap[n].date, ap[n].time, ap[n].duration, ap[n].service, ap[n].caller, ap[n].fac1);
 				if (ap[n].fac2[0] =!'\0')
 				{
 					printf("\t \t \t \t\t \t %s\n", ap[n].fac2);
+					fprintf(out, "\t \t \t \t\t \t %s\n", ap[n].fac2);
 				}
 			}
 		}
@@ -333,8 +341,8 @@ void OutTable(struct appointment ap[],int job)
 
 	printf("```````````````````````````````````````````````````````````````````````\n");
 
-	printf("Room B has the following bookings:\n");
-	printf("Date\t\t Start\t End\t Type\t\t Requester\t Device\n");
+	fprintf(out, "Room B has the following bookings:\n");
+	fprintf(out, "Date\t\t Start\t End\t Type\t\t Requester\t Device\n");
 	for (n = 0; n <= job; n++)
 	{
 		if (!strcmp(ap[n].room, "m_B"))
@@ -342,22 +350,24 @@ void OutTable(struct appointment ap[],int job)
 			if (ap[n].accepted == 1)
 			{
 				printf("%s\t %s\t %s\t %s\t\t %s\t %s\n", ap[n].date, ap[n].time, ap[n].duration,ap[n].service, ap[n].caller, ap[n].fac1);
+				fprintf(out, "%s\t %s\t %s\t %s\t\t %s\t %s\n", ap[n].date, ap[n].time, ap[n].duration, ap[n].service, ap[n].caller, ap[n].fac1);
 				if (ap[n].fac2[0] =!'\0')
 				{
 					printf("\t \t \t \t\t \t %s\n", ap[n].fac2);
+					fprintf(out, "\t \t \t \t\t \t %s\n", ap[n].fac2);
 				}
 			}
 		}
 	}
-	printf("==========================================================\n");
+	fprintf(out, "==========================================================\n");
 
-	printf("End\n");
+	fprintf(out, "End\n");
 
 	//*********************Rejected Part***********************//
-	printf("***Room Booking – REJECTED***\n");
-	printf("Room_A, there are %d bookings rejected.\n",reA);
-	printf("Date\t\t Start\t End\t Type\t\t Requester\t Device\n");
-	printf("==========================================================\n");
+	fprintf(out, "***Room Booking REJECTED***\n");
+	fprintf(out, "Room_A, there are %d bookings rejected.\n",reA);
+	fprintf(out, "Date\t\t Start\t End\t Type\t\t Requester\t Device\n");
+	fprintf(out, "==========================================================\n");
 	for (n = 0; n <= job; n++)
 	{
 		if (!strcmp(ap[n].room, "m_A"))
@@ -365,15 +375,17 @@ void OutTable(struct appointment ap[],int job)
 			if (ap[n].accepted == 0)
 			{
 				printf("%s\t %s\t %s\t %s\t\t %s\t %s\n", ap[n].date, ap[n].time, ap[n].duration,ap[n].service, ap[n].caller, ap[n].fac1);
+				fprintf(out, "%s\t %s\t %s\t %s\t\t %s\t %s\n", ap[n].date, ap[n].time, ap[n].duration, ap[n].service, ap[n].caller, ap[n].fac1);
 				if (ap[n].fac2[0] =!'\0')
 				{
 					printf("\t \t \t \t\t \t %s\n", ap[n].fac2);
+					fprintf(out, "\t \t \t \t\t \t %s\n", ap[n].fac2);
 				}
 			}
 		}
 	}
-	printf("Room_B, there are %d bookings rejected.\n",reB);
-	printf("Date\t\t Start\t End\t Type\t\t Requester\t Device\n");
+	fprintf(out, "Room_B, there are %d bookings rejected.\n",reB);
+	fprintf(out, "Date\t\t Start\t End\t Type\t\t Requester\t Device\n");
 	for (n = 0; n <= job; n++)
 	{
 		if (!strcmp(ap[n].room, "m_B"))
@@ -381,16 +393,19 @@ void OutTable(struct appointment ap[],int job)
 			if (ap[n].accepted == 0)
 			{
 				printf("%s\t %s\t %s\t %s\t\t %s\t %s\n", ap[n].date, ap[n].time, ap[n].duration,ap[n].service, ap[n].caller, ap[n].fac1);
+				fprintf(out, "%s\t %s\t %s\t %s\t\t %s\t %s\n", ap[n].date, ap[n].time, ap[n].duration, ap[n].service, ap[n].caller, ap[n].fac1);
 				if (ap[n].fac2[0] =!'\0')
 				{
 					printf("\t \t \t \t\t \t %s\n", ap[n].fac2);
+					fprintf(out, "\t \t \t \t\t \t %s\n", ap[n].fac2);
 				}
 			}
 		}
 	}
-	printf("==========================================================\n");
+	fprintf(out, "==========================================================\n");
 
-	printf("End\n");
+	fprintf(out,"End\n");
+	fclose(out);
 
 }
 
@@ -486,6 +501,12 @@ int main(){
 
 					if (!strcmp(buf, "Claear"))
 					{
+						for (k=0; k < 10; k++) {
+							for (l=0; l < 9; l++) {
+								timeslot[k][l][0] = 0;
+								timeslot[k][l][1] = 99;//indicating not booked status
+							}
+						}
 						continue;
 					}
 					buf[n] = 0;
@@ -640,6 +661,7 @@ int main(){
 									ap[job_tmp].accepted = 1;
 								}
 								else {
+									printf("%s\n", buf);
 									success = 0;
 									ap[job_tmp].accepted = 0;
 								}
@@ -845,17 +867,23 @@ int main(){
 							int n;
 							for (n = job_tmp+1; n <= job; n++)
 							{
-								if (!strcmp(ap[job_tmp].date, ap[n].date) && !strcmp(ap[job_tmp].room,ap[n].room))
+								
+								if ((!strcmp(ap[job_tmp].date, ap[n].date)) && (!strcmp(ap[job_tmp].room,ap[n].room)))
 								{
+									printf("%d\n", n);
 									if (ap[job_tmp].end > ap[n].start && ap[job_tmp].start < ap[n].end)
 									{
-										ap[job_tmp].accepted = 0;
+										if (ap[n].priority[1] > ap[job_tmp].priority[1] && ap[n].accepted == 1)
+										{
+											printf("dd\n");
+											ap[job_tmp].accepted = 0;
+										}
 									}
 								}
 							}
 						}
 					}
-					OutTable(ap, job);   //ap-> the job pointer   job->number of total jobs (accepted + rejeacted)
+					OutTable(ap, job,in);   //ap-> the job pointer   job->number of total jobs (accepted + rejeacted)
 					for (i = 0; i < 13; i++)     //clear the information in child processes 
 					{
 						write(pcp[i][1], "Clear", 5); /* write to pipe */
@@ -886,5 +914,7 @@ int main(){
 
 	//	}
 		
+	
+
 	return 0;
 }
