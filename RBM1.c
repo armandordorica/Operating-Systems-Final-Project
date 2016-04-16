@@ -151,6 +151,13 @@ struct appointment input(char array []){
 }
 
 int getDate( char date[] ){
+	// This function compare the input date with current date.
+	// example: int i = getDate( ap[job].date );
+	// if i = 11 is Monday of first week.
+	// if i = 21 is Monday of second week.
+	// if i = 0 means that day is no on the range.
+	// i can be 11, 12, 13, 14, 15, 21, 22, 23, 24, 25, 0.
+	
 	time_t current_time;
 	struct tm * timeinfo;
 	struct tm * curtimeinfo;
@@ -158,10 +165,14 @@ int getDate( char date[] ){
 	int i = 0;
 	int weekday= 0;
 	
+	
+	char tempdate [20];
+	strcpy(tempdate, date);
+	printf("%s", tempdate);
 	char temptime[] = " 00:00:00";
-	strcat(date, temptime);
+	strcat(tempdate, temptime);
 
-	strptime(date, "%Y-%m-%d %H:%M:%S", &tm);
+	strptime(tempdate, "%Y-%m-%d %H:%M:%S", &tm);
 	time_t t = mktime(&tm);
 	timeinfo = localtime(&t);
 	int d = timeinfo->tm_mday;
@@ -949,8 +960,8 @@ int main(){
 					else{
 					/* recevice the appointment and put into the appointment array*/
 						ap[job] = input(in);
-						//int weekday = getDate(ap[job].date);
-						//printf("%d", weekday);
+						int weekday = getDate(ap[job].date);
+						printf("%d", weekday);
 						//printf("%s %s %s %s %s %s %s %s\n", ap[job].service, ap[job].date, ap[job].time, ap[job].duration, ap[job].room, ap[job].caller, ap[job].fac1, ap[job].fac2);
 						strcpy(ap[job].priority, "99");
 						job++;
